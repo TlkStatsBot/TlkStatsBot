@@ -39,3 +39,7 @@ obj/
 _ReSharper*/
 [Tt]est[Rr]esult*
 .settings/org.eclipse.jdt.core.prefs
+.classpath
+.project
+db.h2.db
+db.trace.db
