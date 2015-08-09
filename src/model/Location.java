@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Location {
 
 	@JsonProperty
-	private int longitude;
+	private float longitude;
 	
 	@JsonProperty
-	private int latitude;
+	private float latitude;
 	
 	public String toString() {
 		return PrintHelper.toString(this);
