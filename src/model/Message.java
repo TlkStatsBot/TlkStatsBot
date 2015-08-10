@@ -2,6 +2,7 @@ package model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -11,9 +12,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import util.PrintHelper;
 
@@ -35,16 +36,51 @@ public class Message implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date;
 	
-	/* FIXME: 
-	 * This attribute can be of GroupChat or User type.
-	 * When it is a User, it is always equal to the attribute 'from'.
+	/*
+	 * Basically, 
+	 * chat == null if this is a private message
+	 * OR
+	 * chat instanceof GroupChat if this is not a private message.
 	 * 
-	 * Possible fix: Make this attribute of type GroupChat and use a custom json deserializer.
+	 * (The parsing is not that easy because in the json string, this field contains either
+	 * a GroupChat or a User (which equal to the one in the 'from' attribute)
 	 */
-	//@Column(nullable = false)
 	@JsonProperty
-	@Transient
-	private Object chat;
+	@Column
+	private GroupChat chat;
+	
+	@JsonProperty
+	public GroupChat getChat() {
+		if (chat instanceof GroupChat) {
+			return (GroupChat) chat;
+		} else {
+			// chat instanceof User == true, this is a private msg. The user is in the field 'from'
+			return null;
+		}
+	}
+	
+	@JsonProperty
+	public void setChat(Object chat) {
+		
+		if (chat instanceof LinkedHashMap) {
+			// The json will call this method with a LinkedHashMap<String, String>
+			try {
+				@SuppressWarnings("unchecked")
+				LinkedHashMap<String, String> json = (LinkedHashMap<String, String>) chat;
+				ObjectMapper mapper = new ObjectMapper();
+				
+				GroupChat groupChat = mapper.convertValue(json, GroupChat.class);
+				setChat(groupChat);
+			} catch (Exception ignored) {
+				// LinkedHashMap most likely represents a User, so this is a private message.
+				this.chat = null;
+			}
+		} else 	if (chat instanceof GroupChat) {
+			this.chat = (GroupChat) chat;
+		} else {
+			this.chat = null;
+		}
+	}
 	
 	@JsonProperty("forward_from")
 	private User forwardFrom;
