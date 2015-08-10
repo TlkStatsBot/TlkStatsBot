@@ -51,12 +51,7 @@ public class Message implements Serializable {
 	
 	@JsonProperty
 	public GroupChat getChat() {
-		if (chat instanceof GroupChat) {
-			return (GroupChat) chat;
-		} else {
-			// chat instanceof User == true, this is a private msg. The user is in the field 'from'
-			return null;
-		}
+		return chat;
 	}
 	
 	@JsonProperty
