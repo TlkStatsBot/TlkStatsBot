@@ -49,7 +49,7 @@ public class Message implements Serializable {
 	@JsonProperty("forward_from")
 	private User forwardFrom;
 	
-	@JsonProperty("forward_time")
+	@JsonProperty("forward_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date forwardTime;
 	
