@@ -30,6 +30,19 @@ public class User implements Serializable {
 	@JsonProperty("username")
 	private String userName;
 	
+	@Override
+	public int hashCode() {
+		return id;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof User) {
+			return id == ((User) obj).id;
+		}
+		return false;
+	}
+	
 	public String toString() {
 		return PrintHelper.toString(this);
 	}

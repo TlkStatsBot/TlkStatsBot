@@ -27,7 +27,20 @@ public class Contact implements Serializable {
 	private String lastName;
 	
 	@JsonProperty("user_id")
-	private int userId;
+	private Integer userId;
+	
+	@Override
+	public int hashCode() {
+		return phoneNumber.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Contact) {
+			return phoneNumber.equals(((Contact) obj).phoneNumber);
+		}
+		return false;
+	}
 	
 	public String toString() {
 		return PrintHelper.toString(this);

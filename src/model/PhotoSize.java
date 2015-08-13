@@ -30,6 +30,20 @@ public class PhotoSize implements Serializable {
 	@JsonProperty("file_size")
 	private Integer fileSize;
 	
+	@Override
+	public int hashCode() {
+		return fileId.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof PhotoSize) {
+			return fileId.equals(((PhotoSize) obj).fileId);
+		}
+		
+		return false;
+	}
+	
 	public String toString() {
 		return PrintHelper.toString(this);
 	}

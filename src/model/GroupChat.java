@@ -22,6 +22,19 @@ public class GroupChat implements Serializable {
 	@JsonProperty
 	@Column(nullable = false)
 	private String title;
+
+	@Override
+	public int hashCode() {
+		return id;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof GroupChat) {
+			return id == ((GroupChat) obj).id;
+		}
+		return false;
+	}
 	
 	public String toString() {
 		return PrintHelper.toString(this);

@@ -2,6 +2,7 @@ package model;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -20,9 +21,21 @@ public class Update implements Serializable {
 	public int id;
 	
 	@JsonProperty
-	@OneToOne
+	@OneToOne(cascade = CascadeType.MERGE)
 	private Message message;
 	
+	@Override
+	public int hashCode() {
+		return id;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Update) {
+			return id == ((Update) obj).id;
+		}
+		return false;
+	}
 	public String toString() {
 		return PrintHelper.toString(this);
 	}

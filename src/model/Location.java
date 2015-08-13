@@ -22,6 +22,20 @@ public class Location implements Serializable {
 	@Id
 	private float latitude;
 	
+	@Override
+	public int hashCode() {
+		return (int) (longitude * 31 + latitude);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Location) {
+			Location o = (Location) obj;
+			return o.longitude == longitude && o.latitude == latitude;
+		}
+		return false;
+	}
+	
 	public String toString() {
 		return PrintHelper.toString(this);
 	}

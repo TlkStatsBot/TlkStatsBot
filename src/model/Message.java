@@ -5,13 +5,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +22,8 @@ public class Message implements Serializable {
 	private int id;
 	
 	@JsonProperty
-	@Column(nullable = false, name="MSG_ORIGIN") // 'from' is a keyword in sql!
+	@JoinColumn(nullable = false, name="MSG_ORIGIN") // 'from' is a keyword in sql!
+	@ManyToOne(cascade = {CascadeType.ALL})
 	private User from;
 	
 	@JsonProperty
@@ -46,7 +41,7 @@ public class Message implements Serializable {
 	 * a GroupChat or a User (which equal to the one in the 'from' attribute)
 	 */
 	@JsonProperty
-	@Column
+	@ManyToOne(cascade = {CascadeType.ALL})
 	private GroupChat chat;
 	
 	@JsonProperty
@@ -55,8 +50,7 @@ public class Message implements Serializable {
 	}
 	
 	@JsonProperty
-	public void setChat(Object chat) {
-		
+	public void setChat(Object chat) {	
 		if (chat instanceof LinkedHashMap) {
 			// The json will call this method with a LinkedHashMap<String, String>
 			try {
@@ -78,6 +72,7 @@ public class Message implements Serializable {
 	}
 	
 	@JsonProperty("forward_from")
+	@ManyToOne(cascade = {CascadeType.ALL})
 	private User forwardFrom;
 	
 	@JsonProperty("forward_date")
@@ -85,6 +80,7 @@ public class Message implements Serializable {
 	private Date forwardTime;
 	
 	@JsonProperty("reply_to_message")
+	@ManyToOne(cascade = CascadeType.MERGE)
 	private Message responseToMsg;
 	
 	@JsonProperty
@@ -92,42 +88,50 @@ public class Message implements Serializable {
 	private String text;
 	
 	@JsonProperty
+	@ManyToOne(cascade = CascadeType.MERGE)
 	private Audio audio;
 	
 	@JsonProperty
+	@ManyToOne(cascade = CascadeType.MERGE)
 	private Document document;
 	
 	@JsonProperty
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.MERGE)
 	@JoinTable(name="Message_PhotoSize_photo")
 	private List<PhotoSize> photo;
 	
 	@JsonProperty
+	@ManyToOne(cascade = CascadeType.MERGE)
 	private Sticker sticker;
 	
 	@JsonProperty
+	@ManyToOne(cascade = CascadeType.MERGE)
 	private Video video;
 	
 	@JsonProperty
 	private String caption;
 	
 	@JsonProperty
+	@ManyToOne(cascade = CascadeType.MERGE)
 	private Contact contact;
 	
 	@JsonProperty
+	@ManyToOne(cascade = CascadeType.MERGE)
 	private Location location;
 	
 	@JsonProperty("new_chat_participant")
+	@ManyToOne(cascade = CascadeType.MERGE)
 	private User userJoin;
 	
 	@JsonProperty("left_chat_participant")
+	@ManyToOne(cascade = CascadeType.MERGE)
 	private User userPart;
 	
 	@JsonProperty("new_chat_title")
 	private String newChatTitle;
 	
 	@JsonProperty("new_chat_photo")
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.MERGE)
 	@JoinTable(name="Message_PhotoSize_NewChat")
 	private List<PhotoSize> newChatPhoto;
 	
@@ -137,6 +141,19 @@ public class Message implements Serializable {
 	@JsonProperty("group_chat_created")
 	private boolean newGroup;
 
+	@Override
+	public int hashCode() {
+		return id;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Message) {
+			return id == ((Message) obj).id;
+		}
+		return false;
+	}
+	
 	public String toString() {
 		return PrintHelper.toString(this);
 	}

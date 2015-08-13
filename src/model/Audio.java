@@ -29,6 +29,20 @@ public class Audio implements Serializable {
 	@JsonProperty("file_size")
 	private Integer fileSize;
 	
+	@Override
+	public int hashCode() {
+		return fileId.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Audio) {
+			return fileId.equals(((Audio) obj).fileId);
+		}
+		return false;
+	}
+	
+	
 	public String toString() {
 		return PrintHelper.toString(this);
 	}

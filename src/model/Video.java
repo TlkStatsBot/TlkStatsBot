@@ -2,6 +2,7 @@ package model;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -33,7 +34,7 @@ public class Video implements Serializable {
 	private int duration;
 	
 	@JsonProperty
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.MERGE)
 	private PhotoSize thumb;
 	
 	@JsonProperty("mime_type")
@@ -41,6 +42,19 @@ public class Video implements Serializable {
 	
 	@JsonProperty("file_size")
 	private Integer size;
+	
+	@Override
+	public int hashCode() {
+		return id.hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Video) {
+			return id.equals(((Video) obj).id);
+		}
+		return false;
+	}
 	
 	public String toString() {
 		return PrintHelper.toString(this);
