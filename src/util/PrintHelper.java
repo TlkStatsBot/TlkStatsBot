@@ -4,34 +4,45 @@ import java.lang.reflect.Field;
 
 public class PrintHelper {
 
+	private static int indenting = 0;
+	private static final String NEW_LINE = System.lineSeparator();
+	
     public static String toString(Object o) {
       StringBuilder result = new StringBuilder();
-      String newLine = System.getProperty("line.separator");
 
-      result.append( o.getClass().getName() );
-      result.append( " Object {" );
-      result.append(newLine);
+      result.append(o.getClass().getName() );
+      result.append(String.format(" Object[%d] {", System.identityHashCode(o)) );
+      result.append(NEW_LINE);
 
-      //determine fields declared in this class only (no fields of superclass)
       Field[] fields = o.getClass().getDeclaredFields();
 
-      //print field names paired with their values
       for ( Field field : fields  ) {
     	field.setAccessible(true);
-        result.append("  ");
+        result.append(getIndentation() + "  ");
         try {
           result.append( field.getName() );
           result.append(": ");
-          //requires access to private field:
+
+          indenting++;
           result.append( field.get(o) );
+          indenting--;
         } catch ( IllegalAccessException ex ) {
           System.out.println(ex);
         }
-        result.append(newLine);
+        
+        result.append(NEW_LINE);
       }
-      result.append("}");
+      result.append(getIndentation() + "}");
 
       return result.toString();
+    }
+    
+    private static String getIndentation() {
+    	StringBuilder identing = new StringBuilder();
+    	for (int i=0; i<indenting; i++) {
+    		identing.append('\t');
+    	}
+    	return identing.toString();
     }
     
     public String toString() {
