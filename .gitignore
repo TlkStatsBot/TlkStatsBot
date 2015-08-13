@@ -43,3 +43,5 @@ _ReSharper*/
 .project
 db.h2.db
 db.trace.db
+.idea/*
+*.db
