@@ -18,7 +18,7 @@ public class Main {
 			System.exit(1);
 		}
 		
-		TlkStatsBot bot = new TlkStatsBot(token);
+		new TlkStatsBot(token);
 	}
 	
 }

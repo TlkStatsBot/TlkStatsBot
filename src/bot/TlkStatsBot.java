@@ -28,53 +28,50 @@ public class TlkStatsBot {
     private static final int DEFAULT_UPDATE_INTERVAL_MS = 10000;
     private static final int POOL_SIZE = 1;
     
-    private class UpdateTask implements Runnable {
+    private class UpdateTask implements Runnable { 
     	
     	int lastUpdateId = -1;
-    	    	
-    	public void run() { 
-    		EntityManagerFactory factory = null;
-    		EntityManager theManager = null;
+
+    	public void run() { 	
+    		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("local_h2_persistence");
+    		EntityManager entityManager = entityManagerFactory.createEntityManager();
+    		EntityTransaction t = entityManager.getTransaction();
+    		
             try {
             	String offsetParam = lastUpdateId > 0 ? "?offset=" + lastUpdateId : "";
-        		Update[] updates = telegramBotAPI("getUpdates?offset=" + offsetParam, Update[].class);
-
-                factory = Persistence.createEntityManagerFactory("local_h2_persistence");
-                theManager = factory.createEntityManager();
-                EntityTransaction t = theManager.getTransaction();
+        		Update[] updates = telegramBotAPI("getUpdates" + offsetParam, Update[].class);
                 
-                try {
-                	t.begin();
-                    for (Update u : updates) {
-                    	HibernateFix.fixObject(u);      
-                        theManager.merge(u);  
-                        // TODO: Update lastUpdateId
+                for (Update u : updates) {
+                	try {
+	                	t.begin();
+	                	HibernateFix.fixObject(u); 
+	                	entityManager.merge(u);
+	                	t.commit();
+                	} catch (Exception e) {
+                		t.rollback();
+                    	e.printStackTrace();
                     }
-                    t.commit();
-                } catch (Exception e) {
-                	e.printStackTrace();
-                }
-                
-            } catch (Exception e) {
+                } 
+            } catch (Throwable e) {
             	// TODO: Save json String to a file, so that the error can be reproduced and fixed later.
                 e.printStackTrace();
+                System.err.println("EXCEPTION");
+                System.err.flush();
         	} finally {
-        		if (theManager != null) {
-        			theManager.close();
+        		if (entityManager != null) {
+        			entityManager.close();
         		}
         		
-        		if (factory != null) {
-        			factory.close();
+        		if (entityManagerFactory != null) {
+        			entityManagerFactory.close();
         		}
-        		
         		executor.schedule(this, DEFAULT_UPDATE_INTERVAL_MS, TimeUnit.MILLISECONDS);
         	}
 		}
     }
     
     private final String token;
-    private int updateInterval = DEFAULT_UPDATE_INTERVAL_MS;
-    private UpdateTask updateTask = new UpdateTask();
+    private final UpdateTask updateTask = new UpdateTask();
     
 	private final ThreadLocal<ObjectMapper> mapper = new ThreadLocal<ObjectMapper>() {
     	protected ObjectMapper initialValue() {
@@ -82,7 +79,9 @@ public class TlkStatsBot {
     	};
     };
     
-    private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(POOL_SIZE);
+    private static final ScheduledExecutorService executor = Executors.newScheduledThreadPool(POOL_SIZE);
+    
+    private int updateInterval = DEFAULT_UPDATE_INTERVAL_MS;
     
     public TlkStatsBot(String token) {
     	this.token = token;
@@ -91,6 +90,7 @@ public class TlkStatsBot {
     	} catch (Exception e) {
     		throw new RuntimeException("Error testing bot token", e);
     	}
+    	
     	executor.schedule(updateTask, DEFAULT_UPDATE_INTERVAL_MS, TimeUnit.MILLISECONDS);
     }
     
@@ -122,7 +122,6 @@ public class TlkStatsBot {
     }
     
     private static String getHTML(String urlToRead) throws IOException {
-        System.out.println("Getting: " + urlToRead);
         StringBuilder result = new StringBuilder();
 
     	URL url = new URL(urlToRead);
@@ -136,10 +135,8 @@ public class TlkStatsBot {
                 result.append(line);
             }
         }
-        
-        
-        String response = result.toString();
-        
+
+        String response = result.toString();      
         return response;
     }
 }
