@@ -118,6 +118,10 @@ public class Message implements Serializable {
 	private Video video;
 	
 	@JsonProperty
+	@ManyToOne(cascade = CascadeType.MERGE)
+	private Voice voice;
+	
+	@JsonProperty
 	private String caption;
 	
 	@JsonProperty
@@ -253,5 +257,9 @@ public class Message implements Serializable {
 	
 	public boolean isPrivateMsg() {
 		return getChat() == null;
+	}
+
+	public Voice getVoice() {
+		return voice;
 	}
 }
