@@ -166,4 +166,92 @@ public class Message implements Serializable {
 	public String toString() {
 		return PrintHelper.toString(this);
 	}
+
+	public int getId() {
+		return id;
+	}
+
+	public User getFrom() {
+		return from;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public User getForwardFrom() {
+		return forwardFrom;
+	}
+
+	public Date getForwardTime() {
+		return forwardTime;
+	}
+
+	public Message getResponseToMsg() {
+		return responseToMsg;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public Audio getAudio() {
+		return audio;
+	}
+
+	public Document getDocument() {
+		return document;
+	}
+
+	public List<PhotoSize> getPhoto() {
+		return photo;
+	}
+
+	public Sticker getSticker() {
+		return sticker;
+	}
+
+	public Video getVideo() {
+		return video;
+	}
+
+	public String getCaption() {
+		return caption;
+	}
+
+	public Contact getContact() {
+		return contact;
+	}
+
+	public Location getLocation() {
+		return location;
+	}
+
+	public User getUserJoin() {
+		return userJoin;
+	}
+
+	public User getUserPart() {
+		return userPart;
+	}
+
+	public String getNewChatTitle() {
+		return newChatTitle;
+	}
+
+	public List<PhotoSize> getNewChatPhoto() {
+		return newChatPhoto;
+	}
+
+	public boolean isCharPhotoDeleted() {
+		return charPhotoDeleted;
+	}
+
+	public boolean isNewGroup() {
+		return newGroup;
+	}
+	
+	public boolean isPrivateMsg() {
+		return getChat() == null;
+	}
 }

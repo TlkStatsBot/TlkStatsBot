@@ -49,4 +49,24 @@ public class Document implements Serializable {
 	public String toString() {
 		return PrintHelper.toString(this);
 	}
+
+	public String getFileId() {
+		return fileId;
+	}
+
+	public PhotoSize getThumb() {
+		return thumb;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public String getMimeType() {
+		return mimeType;
+	}
+
+	public Integer getFileSize() {
+		return fileSize;
+	}
 }

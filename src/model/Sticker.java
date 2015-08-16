@@ -39,4 +39,24 @@ public class Sticker implements Serializable {
 	public String toString() {
 		return PrintHelper.toString(this);
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public PhotoSize getThumb() {
+		return thumb;
+	}
+
+	public Integer getFileSize() {
+		return fileSize;
+	}
 }

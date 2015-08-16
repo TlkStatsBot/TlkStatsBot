@@ -47,4 +47,20 @@ public class PhotoSize implements Serializable {
 	public String toString() {
 		return PrintHelper.toString(this);
 	}
+
+	public String getFileId() {
+		return fileId;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public Integer getFileSize() {
+		return fileSize;
+	}
 }

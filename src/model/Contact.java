@@ -45,4 +45,20 @@ public class Contact implements Serializable {
 	public String toString() {
 		return PrintHelper.toString(this);
 	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
 }

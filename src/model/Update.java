@@ -39,4 +39,12 @@ public class Update implements Serializable {
 	public String toString() {
 		return PrintHelper.toString(this);
 	}
+
+	public int getId() {
+		return id;
+	}
+
+	public Message getMessage() {
+		return message;
+	}
 }

@@ -39,4 +39,12 @@ public class Location implements Serializable {
 	public String toString() {
 		return PrintHelper.toString(this);
 	}
+
+	public float getLongitude() {
+		return longitude;
+	}
+
+	public float getLatitude() {
+		return latitude;
+	}
 }

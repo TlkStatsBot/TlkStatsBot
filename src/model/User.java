@@ -46,4 +46,20 @@ public class User implements Serializable {
 	public String toString() {
 		return PrintHelper.toString(this);
 	}
+
+	public int getId() {
+		return id;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
 }
