@@ -47,3 +47,8 @@ db.trace.db
 *.db
 token.txt
 TlkStatsBot.iml
+/target/
+
+log.*
+.settings/org.eclipse.m2e.core.prefs
+*.db.*
